@@ -5,5 +5,5 @@
   2. Установить зависимости в виртуальное окружение Python pip install -r requirements.txt
   3. Запустить сбор данных командой python3 binance_api.py
 
-Все данные записываются в json файл
+Все данные записываются в json файл.
 Далеее, уже можно запускать ноутбук для анализа statistical_analysis.ipynb
