@@ -34,8 +34,10 @@ async def collect_data(connection_id):
                 data = []
                 while time.time() - start_time < period:
                     message = await websocket.recv()
-                    data.append(json.loads(message))
-                return data
+                    message_data = json.loads(message)
+                    message_data["receive_time"] = time.time() * 1000
+                    data.append(message_data)
+                return {"connection_id": connection_id, "data": data}
             else:
                 return []
     except Exception as e:
