@@ -2,7 +2,6 @@ import asyncio
 import websockets
 import json
 import time
-from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 
@@ -15,20 +14,17 @@ stream_name = os.getenv('STREAM_NAME')
 output_file = os.getenv('OUTPUT_FILE')
 
 
-async def subscribe(ws):
-    await ws.send(json.dumps({"method": "SUBSCRIBE", "params": [stream_name], "id": 1}))
+async def subscribe(ws, id):
+    await ws.send(json.dumps({"method": "SUBSCRIBE", "params": [stream_name], "id": id}))
      
 async def collect_data(connection_id):
     async with websockets.connect(url) as websocket:
-        await subscribe(websocket)
+        await subscribe(websocket, connection_id)
         start_time = time.time()
         data = []
         while time.time() - start_time < period:
             message = await websocket.recv()
-            message_json = json.loads(message)
-            message_json["connection_id"] = connection_id
-            message_json["timestamp"] = datetime.now(timezone.utc).isoformat()
-            data.append(message_json)
+            data.append(json.loads(message))
         return data
 
 async def main():
